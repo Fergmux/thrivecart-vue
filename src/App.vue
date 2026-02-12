@@ -1,10 +1,10 @@
 <script setup lang="ts">
-
+import Basket from './pages/Basket.vue';
 </script>
 
 <template>
   <div>
-    
+    <Basket />
   </div>
 </template>
 

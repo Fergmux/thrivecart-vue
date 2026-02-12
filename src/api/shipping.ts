@@ -4,15 +4,20 @@ export const getShippingCosts = async (): Promise<ShippingCost[]> => {
   return [
     {
       minimumOrderValue: 0,
-      shippingCost: 4.95,
+      maximumOrderValue: 5000,
+      shippingCost: 495,
+      hint: 'Spend over £50 to reduce delivery to £2.95',
     },
     {
-      minimumOrderValue: 50,
-      shippingCost: 2.95,
+      minimumOrderValue: 5000,
+      maximumOrderValue: 9000,
+      shippingCost: 295,
+      hint: 'Spend over £90 for free delivery!',
     },
     {
-      minimumOrderValue: 90,
+      minimumOrderValue: 9000,
+      maximumOrderValue: Infinity,
       shippingCost: 0,
     },
-  ]
+  ];
 };
