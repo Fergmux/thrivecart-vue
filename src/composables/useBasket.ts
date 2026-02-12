@@ -35,7 +35,6 @@ export const useBasket = createSharedComposable((): UseBasketReturn => {
 
   const basketItems = ref<BasketItem[]>([]);
 
-  // ── Add method ──────────────────────────────────────────
   function addToBasket(product: CatalogueItem): void {
     const existing = basketItems.value.find((i) => i.code === product.code);
     if (existing) {
@@ -45,7 +44,6 @@ export const useBasket = createSharedComposable((): UseBasketReturn => {
     basketItems.value.push({ ...product, quantity: 1 });
   }
 
-  // ── Remove method ───────────────────────────────────────
   function removeFromBasket(code: ProductCode): void {
     const idx = basketItems.value.findIndex((i) => i.code === code);
     if (idx === -1) return;
@@ -57,13 +55,11 @@ export const useBasket = createSharedComposable((): UseBasketReturn => {
     }
   }
 
-  // ── Delete all of a product ────────────────────────────
   function deleteFromBasket(code: ProductCode): void {
     const idx = basketItems.value.findIndex((i) => i.code === code);
     if (idx !== -1) basketItems.value.splice(idx, 1);
   }
 
-  // ── Derived values ──────────────────────────────────────
   const basketItemCount = computed<number>(() =>
     basketItems.value.reduce((sum, i) => sum + i.quantity, 0),
   );
@@ -72,7 +68,6 @@ export const useBasket = createSharedComposable((): UseBasketReturn => {
     basketItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0),
   );
 
-  // ── Discount (async) ────────────────────────────────────
   const basketDiscount = ref(0);
 
   watch(
@@ -87,7 +82,6 @@ export const useBasket = createSharedComposable((): UseBasketReturn => {
     { deep: true },
   );
 
-  // ── Delivery ────────────────────────────────────────────
   const currentShippingRule = computed<ShippingCost | null>(() => {
     if (basketItems.value.length === 0) return null;
     const orderValue = basketSubtotal.value - basketDiscount.value;
@@ -102,7 +96,6 @@ export const useBasket = createSharedComposable((): UseBasketReturn => {
 
   const basketDeliveryHint = computed<string | null>(() => currentShippingRule.value?.hint ?? null);
 
-  // ── Total ───────────────────────────────────────────────
   const basketTotal = computed<number>(
     () => basketSubtotal.value - basketDiscount.value + basketDelivery.value,
   );

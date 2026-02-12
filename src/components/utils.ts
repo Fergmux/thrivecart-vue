@@ -1,4 +1,4 @@
-import type { ProductCode } from '@api/data';
+import type { ProductCode } from '@api/types';
 
 export interface ProductColors {
   bg: string;
