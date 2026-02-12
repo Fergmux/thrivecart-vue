@@ -6,11 +6,11 @@ import {
   watch,
 } from 'vue';
 
-import type { ProductCode } from '@api/data';
 import { calculatePromotions } from '@api/promotions';
 import type {
   BasketItem,
   CatalogueItem,
+  ProductCode,
   ShippingCost,
 } from '@api/types';
 import { createSharedComposable } from '@vueuse/core';

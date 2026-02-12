@@ -1,5 +1,13 @@
-import type { ProductCode } from './data';
+import {
+  BLUE_WIDGET_CODE,
+  GREEN_WIDGET_CODE,
+  RED_WIDGET_CODE,
+} from './data';
 
+export type ProductCode =
+  | typeof RED_WIDGET_CODE
+  | typeof GREEN_WIDGET_CODE
+  | typeof BLUE_WIDGET_CODE;
 export interface CatalogueItem {
   code: ProductCode;
   name: string;
