@@ -13,7 +13,9 @@ export interface BasketItem {
 
 export interface ShippingCost {
   minimumOrderValue: number;
+  maximumOrderValue: number;
   shippingCost: number;
+  hint?: string;
 }
 
 export interface Promotion {
