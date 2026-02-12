@@ -1,13 +1,12 @@
+import type { ProductCode } from './data';
+
 export interface CatalogueItem {
-  code: string;
+  code: ProductCode;
   name: string;
   price: number;
 }
 
-export interface BasketItem {
-  code: string;
-  name: string;
-  price: number;
+export interface BasketItem extends CatalogueItem {
   quantity: number;
 }
 
@@ -25,3 +24,4 @@ export interface Promotion {
 export interface Discount {
   discount: number;
 }
+

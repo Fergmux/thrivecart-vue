@@ -1,5 +1,14 @@
+import type { ProductCode } from '@api/data';
+
+export interface ProductColors {
+  bg: string;
+  ring: string;
+  text: string;
+  badge: string;
+}
+
 // Shared colour helpers per product code
-const colorMap: Record<string, { bg: string; ring: string; text: string; badge: string }> = {
+const colorMap: Record<ProductCode, ProductColors> = {
   R01: { bg: 'bg-red-500/10', ring: 'ring-red-500/30', text: 'text-red-400', badge: 'bg-red-500' },
   G01: {
     bg: 'bg-emerald-500/10',
@@ -15,22 +24,22 @@ const colorMap: Record<string, { bg: string; ring: string; text: string; badge: 
   },
 };
 
-const defaultColors = {
+const defaultColors: ProductColors = {
   bg: 'bg-gray-500/10',
   ring: 'ring-gray-500/30',
   text: 'text-gray-400',
   badge: 'bg-gray-500',
 };
 
-export function colors(code: string) {
+export function colors(code: ProductCode): ProductColors {
   return colorMap[code] ?? defaultColors;
 }
 
-const currencyFormatter = new Intl.NumberFormat('en-GB', {
+const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
-  currency: 'GBP',
+  currency: 'USD',
 });
 
-export function formatPrice(value: number) {
+export function formatPrice(value: number): string {
   return currencyFormatter.format(value / 100);
 }

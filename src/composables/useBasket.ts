@@ -1,18 +1,42 @@
-import { computed, ref, watch } from 'vue';
+import {
+  computed,
+  type ComputedRef,
+  ref,
+  type Ref,
+  watch,
+} from 'vue';
 
+import type { ProductCode } from '@api/data';
 import { calculatePromotions } from '@api/promotions';
-import type { BasketItem, CatalogueItem } from '@api/types';
+import type {
+  BasketItem,
+  CatalogueItem,
+  ShippingCost,
+} from '@api/types';
 import { createSharedComposable } from '@vueuse/core';
 
 import { useApi } from './useApi';
 
-export const useBasket = createSharedComposable(() => {
+export interface UseBasketReturn {
+  basketItems: Ref<BasketItem[]>;
+  addToBasket: (product: CatalogueItem) => void;
+  removeFromBasket: (code: ProductCode) => void;
+  deleteFromBasket: (code: ProductCode) => void;
+  basketItemCount: ComputedRef<number>;
+  basketSubtotal: ComputedRef<number>;
+  basketDiscount: Ref<number>;
+  basketDelivery: ComputedRef<number>;
+  basketDeliveryHint: ComputedRef<string | null>;
+  basketTotal: ComputedRef<number>;
+}
+
+export const useBasket = createSharedComposable((): UseBasketReturn => {
   const { shippingRules } = useApi();
 
   const basketItems = ref<BasketItem[]>([]);
 
   // ── Add method ──────────────────────────────────────────
-  function addToBasket(product: CatalogueItem) {
+  function addToBasket(product: CatalogueItem): void {
     const existing = basketItems.value.find((i) => i.code === product.code);
     if (existing) {
       existing.quantity++;
@@ -22,7 +46,7 @@ export const useBasket = createSharedComposable(() => {
   }
 
   // ── Remove method ───────────────────────────────────────
-  function removeFromBasket(code: string) {
+  function removeFromBasket(code: ProductCode): void {
     const idx = basketItems.value.findIndex((i) => i.code === code);
     if (idx === -1) return;
     const item = basketItems.value[idx];
@@ -34,15 +58,17 @@ export const useBasket = createSharedComposable(() => {
   }
 
   // ── Delete all of a product ────────────────────────────
-  function deleteFromBasket(code: string) {
+  function deleteFromBasket(code: ProductCode): void {
     const idx = basketItems.value.findIndex((i) => i.code === code);
     if (idx !== -1) basketItems.value.splice(idx, 1);
   }
 
   // ── Derived values ──────────────────────────────────────
-  const basketItemCount = computed(() => basketItems.value.reduce((sum, i) => sum + i.quantity, 0));
+  const basketItemCount = computed<number>(() =>
+    basketItems.value.reduce((sum, i) => sum + i.quantity, 0),
+  );
 
-  const basketSubtotal = computed(() =>
+  const basketSubtotal = computed<number>(() =>
     basketItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0),
   );
 
@@ -62,7 +88,7 @@ export const useBasket = createSharedComposable(() => {
   );
 
   // ── Delivery ────────────────────────────────────────────
-  const currentShippingRule = computed(() => {
+  const currentShippingRule = computed<ShippingCost | null>(() => {
     if (basketItems.value.length === 0) return null;
     const orderValue = basketSubtotal.value - basketDiscount.value;
     return (
@@ -72,12 +98,12 @@ export const useBasket = createSharedComposable(() => {
     );
   });
 
-  const basketDelivery = computed(() => currentShippingRule.value?.shippingCost ?? 0);
+  const basketDelivery = computed<number>(() => currentShippingRule.value?.shippingCost ?? 0);
 
-  const basketDeliveryHint = computed(() => currentShippingRule.value?.hint ?? null);
+  const basketDeliveryHint = computed<string | null>(() => currentShippingRule.value?.hint ?? null);
 
   // ── Total ───────────────────────────────────────────────
-  const basketTotal = computed(
+  const basketTotal = computed<number>(
     () => basketSubtotal.value - basketDiscount.value + basketDelivery.value,
   );
 

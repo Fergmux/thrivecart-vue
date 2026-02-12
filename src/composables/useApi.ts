@@ -1,12 +1,26 @@
-import { onMounted, ref } from 'vue';
+import {
+  onMounted,
+  ref,
+  type Ref,
+} from 'vue';
 
 import { getCatalogue } from '@api/catalogue';
 import { getPromotions } from '@api/promotions';
 import { getShippingCosts } from '@api/shipping';
-import type { CatalogueItem, Promotion, ShippingCost } from '@api/types';
+import type {
+  CatalogueItem,
+  Promotion,
+  ShippingCost,
+} from '@api/types';
 import { createSharedComposable } from '@vueuse/core';
 
-export const useApi = createSharedComposable(() => {
+export interface UseApiReturn {
+  catalogue: Ref<CatalogueItem[]>;
+  promotions: Ref<Promotion[]>;
+  shippingRules: Ref<ShippingCost[]>;
+}
+
+export const useApi = createSharedComposable((): UseApiReturn => {
   const catalogue = ref<CatalogueItem[]>([]);
   const promotions = ref<Promotion[]>([]);
   const shippingRules = ref<ShippingCost[]>([]);
